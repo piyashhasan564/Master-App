@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Master Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary: #2563eb;
+            --secondary: #1e293b;
+            --accent: #3b82f6;
+            --bg: #f3f4f6;
+            --card-bg: #ffffff;
+            --text-main: #1f2937;
+            --text-light: #6b7280;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { background: var(--bg); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+
+        /* --- Navbar --- */
+        .navbar {
+            background: var(--card-bg); height: 70px; display: flex; justify-content: space-between; align-items: center;
+            padding: 0 30px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); z-index: 50;
+        }
+        .navbar h2 { font-size: 20px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 10px; }
+        .logout-btn { background: #fee2e2; color: var(--danger); border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        .logout-btn:hover { background: var(--danger); color: white; }
+/* Home Button Design */
+.home-btn { 
+    background: #10b981; /* সবুজ রঙ */
+    color: white; 
+    border: none; 
+    padding: 8px 15px; 
+    border-radius: 8px; 
+    font-weight: 600; 
+    cursor: pointer; 
+    transition: 0.3s; 
+    margin-right: 10px; /* Logout বাটন থেকে একটু দূরে */
+}
+.home-btn:hover { 
+    background: #059669; 
+    transform: translateY(-2px);
+}
+        /* --- Layout --- */
+        .main-container { flex: 1; padding: 30px; overflow-y: auto; max-width: 1200px; margin: 0 auto; width: 100%; }
+        .hidden { display: none !important; }
+
+        /* --- Cards & Lists --- */
+        .header-action { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .btn-add { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 10px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); display: flex; align-items: center; gap: 8px; transition: 0.2s; }
+        .btn-add:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3); }
+
+        /* --- Client List Item Design --- */
+        .client-card {
+            background: var(--card-bg); border-radius: 16px; padding: 20px; margin-bottom: 20px;
+            display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid #e5e7eb; transition: 0.3s;
+        }
+        .client-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); border-color: var(--primary); }
+
+        .client-info-wrapper { display: flex; align-items: center; gap: 20px; flex: 1; }
+        .client-img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 3px solid #e2e8f0; }
+        
+        .client-details h3 { font-size: 18px; font-weight: 700; color: var(--secondary); margin-bottom: 4px; }
+        .app-badge { background: #eff6ff; color: var(--primary); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; }
+        .category-badge { background: #f3e8ff; color: #9333ea; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; margin-left: 5px; text-transform: uppercase; }
+        
+        .client-meta { font-size: 13px; color: var(--text-light); margin-top: 5px; display: flex; flex-wrap: wrap; gap: 15px; }
+        .client-meta i { color: var(--accent); margin-right: 5px; }
+
+        .client-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; min-width: 120px; }
+        .status-pill { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+        .status-active { background: #d1fae5; color: #059669; }
+        .status-inactive { background: #fee2e2; color: #dc2626; }
+        
+        .btn-manage { background: var(--secondary); color: white; border: none; padding: 8px 18px; border-radius: 8px; font-size: 13px; cursor: pointer; transition: 0.2s; }
+        .btn-manage:hover { background: var(--primary); }
+
+        /* --- Manage Page (Detail View) --- */
+        .manage-header { text-align: center; margin-bottom: 30px; }
+        .manage-img { width: 100px; height: 100px; border-radius: 50%; border: 4px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .manage-title { font-size: 24px; font-weight: 700; margin-top: 10px; }
+        .manage-subtitle { color: var(--text-light); font-size: 14px; margin-top: 5px; }
+
+        .control-box { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); max-width: 600px; margin: 0 auto; }
+        
+        .switch-group { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px dashed #e5e7eb; }
+        .switch-label { font-weight: 600; color: var(--secondary); }
+        
+        /* Toggle Switch */
+        .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary); }
+        input:checked + .slider:before { transform: translateX(24px); }
+
+        /* Telegram Spoiler Style License Key */
+        .license-container { margin: 25px 0; text-align: center; }
+        .license-label { font-size: 12px; font-weight: 700; color: var(--text-light); text-transform: uppercase; margin-bottom: 8px; display: block; }
+        
+        .spoiler-box {
+            position: relative; display: inline-block; padding: 12px 20px; 
+            border-radius: 8px; font-family: 'Courier New', monospace; font-weight: bold; font-size: 16px;
+            cursor: pointer; user-select: none; transition: 0.3s; width: 100%;
+            background: #f8fafc; border: 1px solid #e2e8f0; color: #333;
+        }
+
+        /* The "Jirjir" Effect (Noise/Blur) */
+        .spoiler-box.hidden-key {
+            color: transparent;
+            background-color: #94a3b8;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.5'/%3E%3C/svg%3E");
+            text-shadow: 0 0 10px rgba(0,0,0,0.5);
+            overflow: hidden;
+        }
+        .spoiler-box.hidden-key::after {
+            content: "CLICK TO REVEAL"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            font-size: 10px; color: rgba(255,255,255,0.8); font-family: sans-serif; letter-spacing: 1px;
+        }
+
+        .desc-box { margin-top: 20px; }
+        .desc-box textarea { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; resize: vertical; min-height: 80px; }
+        .btn-update-desc { margin-top: 8px; width: 100%; padding: 8px; background: var(--secondary); color: white; border: none; border-radius: 6px; cursor: pointer; }
+
+        .btn-config { margin-top: 20px; width: 100%; padding: 15px; background: #e0f2fe; color: #0284c7; border: 2px dashed #0284c7; border-radius: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-config:hover { background: #bae6fd; }
+
+        /* --- Login & Modals --- */
+        #login-view { height: 100vh; display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, #2563eb, #1e40af); }
+        .login-box { background: white; padding: 40px; border-radius: 20px; width: 100%; max-width: 380px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); text-align: center; }
+        .login-input { width: 100%; padding: 14px; margin-bottom: 15px; border: 2px solid #f1f5f9; border-radius: 10px; outline: none; transition: 0.3s; }
+        .login-input:focus { border-color: var(--primary); }
+
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 1000; display: flex; justify-content: center; align-items: center; }
+        .modal-content { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 500px; animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); max-height: 90vh; overflow-y: auto; }
+        @keyframes popUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+
+        /* Form Styling */
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--secondary); margin-bottom: 5px; }
+        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; }
+        .file-upload { border: 2px dashed #cbd5e1; padding: 20px; text-align: center; border-radius: 8px; cursor: pointer; color: var(--text-light); }
+        .file-upload:hover { border-color: var(--primary); color: var(--primary); }
+
+        .back-btn { background: transparent; border: none; font-size: 18px; color: var(--secondary); cursor: pointer; margin-right: 15px; }
+    </style>
+</head>
+<body>
+
+    <!-- 1. LOGIN VIEW -->
+    <div id="login-view">
+        <div class="login-box">
+            <h2 style="color:var(--primary); margin-bottom:10px;">Master Panel</h2>
+            <p style="color:var(--text-light); margin-bottom:25px; font-size:14px;">Secure Access Control</p>
+            <form id="login-form">
+                <input type="email" id="login-email" class="login-input" placeholder="Admin Email" required>
+                <input type="password" id="login-password" class="login-input" placeholder="Password" required>
+                <button type="submit" class="btn-add" style="width: 100%; justify-content: center;">Login Access</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- 2. MAIN APP DASHBOARD -->
+    <div id="main-app" class="hidden">
+        
+        <!-- Navbar এর ভেতরে এই বাটনটি বসান -->
+<div class="navbar">
+    <h2><i class="fas fa-shield-alt"></i> Master Admin</h2>
+    
+    <!-- ⬇️ নতুন হোম বাটন (এখানে বসান) ⬇️ -->
+    <div>
+        <button class="home-btn" onclick="goBackToApp()">
+            <i class="fas fa-home"></i> Home App
+        </button>
+        
+        <button class="logout-btn" onclick="logoutMaster()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+        </button>
+    </div>
+</div>
+
+        <!-- LIST VIEW PAGE -->
+        <div id="list-view" class="main-container">
+            <div class="header-action">
+                <h3 style="font-size: 22px; font-weight: 700;">All Client Apps</h3>
+                <button class="btn-add" onclick="openAddModal()"><i class="fas fa-plus-circle"></i> New Client</button>
+            </div>
+            
+            <div id="clients-list-container">
+                <!-- Clients will be loaded here via JS -->
+            </div>
+        </div>
+
+        <!-- MANAGE DETAILS PAGE (Overlay View) -->
+        <div id="manage-view" class="main-container hidden" style="background: white; position: absolute; top: 70px; left: 0; height: calc(100vh - 70px); width: 100%; z-index: 60;">
+            <div style="max-width: 600px; margin: 0 auto; padding-top: 20px;">
+                <button class="back-btn" onclick="closeManageView()"><i class="fas fa-arrow-left"></i> Back to List</button>
+                
+                <div class="manage-header">
+                    <img id="m-profile-pic" src="" class="manage-img">
+                    <h2 id="m-client-name" class="manage-title">Client Name</h2>
+                    <div class="manage-subtitle">
+                        <span id="m-app-name" style="font-weight: 600; color: var(--primary);">App Name</span> 
+                        <span id="m-category-badge" class="category-badge">CATEGORY</span> &bull; 
+                        <span id="m-number">017XXXXXXXX</span>
+                    </div>
+                    <p style="font-size: 13px; color: #ef4444; font-weight: 600; margin-top: 5px;">
+                        <i class="fas fa-calendar-alt"></i> Expire: <span id="m-expiry"></span>
+                    </p>
+                    <p id="m-address" style="font-size: 13px; color: var(--text-light); margin-top: 5px;"><i class="fas fa-map-marker-alt"></i> Address Here</p>
+                </div>
+
+                <div class="control-box">
+                    <!-- Status Switch -->
+                    <div class="switch-group">
+                        <div>
+                            <span class="switch-label">App Status</span>
+                            <p style="font-size:11px; color:#ef4444;">Inactive = User Locked Out</p>
+                        </div>
+                        <label class="switch">
+                            <input type="checkbox" id="m-status-switch" onchange="updateClientStatus()">
+                            <span class="slider"></span>
+                        </label>
+                    </div>
+
+                    <!-- License Key Spoiler -->
+                    <div class="license-container">
+                        <span class="license-label">License Key (Tap to Reveal/Copy)</span>
+                        <div id="m-license-spoiler" class="spoiler-box hidden-key" onclick="handleSpoilerClick()">
+                            <!-- Key will be injected here -->
+                        </div>
+                    </div>
+
+                    <!-- Description -->
+                    <div class="desc-box">
+                        <label class="switch-label" style="font-size:13px; display:block; margin-bottom:5px;">Admin Note / Description</label>
+                        <textarea id="m-description" placeholder="Write details about this client..."></textarea>
+                        <button class="btn-update-desc" onclick="updateDescription()">Save Note</button>
+                    </div>
+
+                    <!-- Config Button -->
+                    <button class="btn-config" onclick="viewConfig()">
+                        <i class="fas fa-code"></i> View Firebase Config (JSON)
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ADD CLIENT MODAL -->
+    <div id="add-modal" class="modal hidden">
+        <div class="modal-content">
+            <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+                <h3 style="font-size:18px;">Register New Client</h3>
+                <span style="cursor:pointer; font-size:24px;" onclick="closeAddModal()">&times;</span>
+            </div>
+            
+            <form id="add-client-form">
+                <div class="form-group" style="text-align:center;">
+                    <label for="profile-upload" class="file-upload" id="upload-label">
+                        <i class="fas fa-cloud-upload-alt"></i> Upload Profile Pic
+                    </label>
+                    <input type="file" id="profile-upload" accept="image/*" class="hidden" required>
+                    <input type="hidden" id="uploaded-image-url">
+                </div>
+
+                <!-- App Category Selection -->
+                <div class="form-group">
+                    <label>App Category</label>
+                    <select id="new-app-category" required style="background:#f0f9ff; border-color:#bae6fd;">
+                        <option value="samiti">Samiti App (Visible in User Panel)</option>
+                        <option value="other">Other / Admin Only (Hidden)</option>
+                    </select>
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>Client Name</label>
+                        <input type="text" id="new-client-name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>App Name</label>
+                        <input type="text" id="new-app-name" required>
+                    </div>
+                </div>
+
+                <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div class="form-group">
+                        <label>Mobile Number</label>
+                        <input type="text" id="new-number" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Expiry Date</label>
+                        <input type="date" id="new-expiry-date" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Address</label>
+                    <input type="text" id="new-address" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Firebase Config (JSON)</label>
+                    <textarea id="new-config" placeholder='{"apiKey": "AIza...", ...}' style="height:80px; font-family:monospace;" required></textarea>
+                </div>
+
+                <button type="submit" class="btn-add" style="width:100%; justify-content:center;" id="btn-submit-client">Create License</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- NEW: RENEW / EXTEND EXPIRY MODAL -->
+    <div id="extend-modal" class="modal hidden">
+        <div class="modal-content" style="border: 2px solid var(--danger);">
+            <div style="text-align:center; margin-bottom:20px;">
+                <i class="fas fa-exclamation-circle" style="font-size: 40px; color: var(--danger); margin-bottom:10px;"></i>
+                <h3 style="font-size:18px; color:var(--secondary);">Expired! Renewal Required</h3>
+                <p style="font-size:13px; color:var(--text-light);">এই ক্লায়েন্টের মেয়াদ শেষ হয়ে গেছে। পুনরায় চালু করতে নতুন তারিখ দিন।</p>
+            </div>
+            
+            <div class="form-group">
+                <label>New Expiry Date</label>
+                <input type="date" id="renew-date-input" required style="border-color: var(--primary);">
+            </div>
+
+            <button onclick="saveRenewal()" class="btn-add" style="width:100%; justify-content:center; background: var(--success);">
+                <i class="fas fa-check"></i> Renew & Activate
+            </button>
+            <button onclick="closeExtendModal()" style="width:100%; margin-top:10px; background:transparent; border:none; color:var(--text-light); cursor:pointer;">Cancel</button>
+        </div>
+    </div>
+
+    <!-- CONFIG VIEW MODAL -->
+    <div id="config-modal" class="modal hidden">
+        <div class="modal-content" style="background: #1e293b; color: #a5b4fc;">
+            <div style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid #334155; padding-bottom:10px;">
+                <h3 style="color:white;">Configuration</h3>
+                <span style="cursor:pointer; font-size:24px; color:white;" onclick="document.getElementById('config-modal').classList.add('hidden')">&times;</span>
+            </div>
+            <pre id="config-display" style="white-space: pre-wrap; word-break: break-all; font-family: monospace; font-size: 12px;"></pre>
+            <button onclick="copyConfig()" style="width:100%; margin-top:15px; padding:10px; background:var(--primary); color:white; border:none; border-radius:5px; cursor:pointer;">Copy Config</button>
+        </div>
+    </div>
+
+    <!-- FIREBASE SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <script>
+        // ==========================================
+        // 1. CONFIGURATION
+        // ==========================================
+        const MASTER_CONFIG = {
+          apiKey: "AIzaSyDymwRujTzHC8Q5mvakETYKB1ATLd7UhuA",
+          authDomain: "my-master-e8f78.firebaseapp.com",
+          projectId: "my-master-e8f78",
+          storageBucket: "my-master-e8f78.firebasestorage.app",
+          messagingSenderId: "33225578063",
+          appId: "1:33225578063:web:07858a3a2b3cdaa5593c3a"
+        };
+        const IMGBB_API_KEY = "e008e4a3e2bceec3a97103d79cde74a3";
+
+        // Init Firebase
+        firebase.initializeApp(MASTER_CONFIG);
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+
+        let currentManageId = null;
+        let currentManageData = null;
+
+        // ==========================================
+        // 2. AUTHENTICATION LOGIC
+        // ==========================================
+        auth.onAuthStateChanged((user) => {
+            if (user) {
+                document.getElementById('login-view').classList.add('hidden');
+                document.getElementById('main-app').classList.remove('hidden');
+                loadClients();
+            } else {
+                document.getElementById('login-view').classList.remove('hidden');
+                document.getElementById('main-app').classList.add('hidden');
+            }
+        });
+
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const email = document.getElementById('login-email').value;
+            const pass = document.getElementById('login-password').value;
+            auth.signInWithEmailAndPassword(email, pass).catch(err => alert(err.message));
+        });
+
+        function logoutMaster() {
+            if(confirm('Logout?')) auth.signOut();
+        }
+
+        // ==========================================
+        // 3. IMGBB UPLOAD LOGIC
+        // ==========================================
+        const fileInput = document.getElementById('profile-upload');
+        fileInput.addEventListener('change', async function() {
+            if(this.files && this.files[0]) {
+                const label = document.getElementById('upload-label');
+                label.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
+                
+                const formData = new FormData();
+                formData.append('image', this.files[0]);
+
+                try {
+                    const res = await fetch(`https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`, {
+                        method: 'POST',
+                        body: formData
+                    });
+                    const data = await res.json();
+                    if(data.success) {
+                        document.getElementById('uploaded-image-url').value = data.data.url;
+                        label.innerHTML = `<i class="fas fa-check-circle" style="color:var(--success)"></i> Uploaded`;
+                        label.style.borderColor = 'var(--success)';
+                    } else {
+                        throw new Error('Upload failed');
+                    }
+                } catch(e) {
+                    alert('Image upload failed!');
+                    label.innerHTML = 'Try Again';
+                }
+            }
+        });
+// --- BACK TO INDEX APP FUNCTION ---
+function goBackToApp() {
+    // এটি ফোনের ব্যাক বাটনের মতো কাজ করবে এবং আগের পেজে (Index App) নিয়ে যাবে
+    if (confirm("Go back to Main App?")) {
+        window.history.back();
+    }
+}
+        // ==========================================
+        // 4. CLIENT MANAGEMENT (CRUD)
+        // ==========================================
+        
+        // --- A. Generate License Key (PZZ-XXXXXXXXXX) ---
+        function generateLicenseKey() {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let randomStr = '';
+            for (let i = 0; i < 20; i++) {
+                randomStr += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return 'PZZ-' + randomStr;
+        }
+
+        // --- B. Add Client ---
+        document.getElementById('add-client-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = document.getElementById('btn-submit-client');
+            const imgUrl = document.getElementById('uploaded-image-url').value;
+
+            if(!imgUrl) return alert("Please upload a profile picture first!");
+            
+            btn.innerHTML = 'Creating...';
+            btn.disabled = true;
+
+            try {
+                const configStr = document.getElementById('new-config').value;
+                const appType = document.getElementById('new-app-category').value;
+                
+                // --- SMART CONFIG PARSER ---
+                const firstBrace = configStr.indexOf('{');
+                const lastBrace = configStr.lastIndexOf('}');
+
+                if (firstBrace === -1 || lastBrace === -1) {
+                    throw new Error("Invalid Config! দয়া করে পুরো অবজেক্টটি কপি করুন {...}");
+                }
+
+                const cleanConfigStr = configStr.substring(firstBrace, lastBrace + 1);
+                const configObj = (new Function("return " + cleanConfigStr))();
+
+                const licenseKey = generateLicenseKey();
+
+                const clientData = {
+                    profilePic: imgUrl,
+                    name: document.getElementById('new-client-name').value,
+                    appName: document.getElementById('new-app-name').value,
+                    appCategory: appType,
+                    number: document.getElementById('new-number').value,
+                    address: document.getElementById('new-address').value,
+                    expiryDate: document.getElementById('new-expiry-date').value,
+                    config: configObj,
+                    isActive: true,
+                    description: "",
+                    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                };
+
+                await db.collection('clients').doc(licenseKey).set(clientData);
+                
+                alert(`Client Created Successfully!\nLicense Key: ${licenseKey}`);
+                closeAddModal();
+                e.target.reset();
+                document.getElementById('upload-label').innerHTML = '<i class="fas fa-cloud-upload-alt"></i> Upload Profile Pic';
+                document.getElementById('uploaded-image-url').value = '';
+
+            } catch (err) {
+                console.error(err);
+                alert("Error: " + err.message);
+            } finally {
+                btn.innerHTML = 'Create License';
+                btn.disabled = false;
+            }
+        });
+
+        // --- C. Load List (Auto-Expiry Check) ---
+        function loadClients() {
+            db.collection('clients').orderBy('createdAt', 'desc').onSnapshot(snap => {
+                const container = document.getElementById('clients-list-container');
+                container.innerHTML = '';
+                
+                const today = new Date().toISOString().split('T')[0]; // Current Date YYYY-MM-DD
+
+                if(snap.empty) {
+                    container.innerHTML = '<p style="text-align:center; color:#999; margin-top:50px;">No clients found.</p>';
+                    return;
+                }
+
+                snap.forEach(doc => {
+                    const d = doc.data();
+                    
+                    // --- AUTO EXPIRE LOGIC ---
+                    // If client is marked active, BUT date is passed, make inactive automatically
+                    if (d.isActive && d.expiryDate < today) {
+                        db.collection('clients').doc(doc.id).update({ isActive: false });
+                    }
+
+                    const statusClass = d.isActive ? 'status-active' : 'status-inactive';
+                    const statusText = d.isActive ? 'ACTIVE' : 'INACTIVE';
+                    const category = d.appCategory ? d.appCategory.toUpperCase() : 'SAMITI'; 
+                    
+                    const html = `
+                    <div class="client-card">
+                        <div class="client-info-wrapper">
+                            <img src="${d.profilePic}" class="client-img" alt="Profile">
+                            <div class="client-details">
+                                <h3>${d.name}</h3>
+                                <span class="app-badge">${d.appName}</span>
+                                <span class="category-badge">${category}</span>
+                                <div class="client-meta">
+                                    <span><i class="fas fa-phone-alt"></i> ${d.number}</span>
+                                    <span style="color: #dc2626;"><i class="fas fa-clock"></i> ${d.expiryDate}</span>
+                                    <span style="display:block; width:100%; margin-top:5px;"><i class="fas fa-map-marker-alt"></i> ${d.address}</span>
+
+                                </div>
+                            </div>
+                        </div>
+                        <div class="client-actions">
+                            <span class="status-pill ${statusClass}">${statusText}</span>
+                            <button class="btn-manage" onclick="openManagePage('${doc.id}')">
+                                Manage <i class="fas fa-chevron-right"></i>
+                            </button>
+                        </div>
+                    </div>`;
+                    container.innerHTML += html;
+                });
+            });
+        }
+
+        // ==========================================
+        // 5. MANAGE PAGE LOGIC (Updated with Validation)
+        // ==========================================
+        async function openManagePage(id) {
+            currentManageId = id;
+            document.getElementById('list-view').classList.add('hidden');
+            document.getElementById('manage-view').classList.remove('hidden');
+
+            const doc = await db.collection('clients').doc(id).get();
+            if(doc.exists) {
+                const d = doc.data();
+                currentManageData = d;
+                
+                document.getElementById('m-profile-pic').src = d.profilePic;
+                document.getElementById('m-client-name').innerText = d.name;
+                document.getElementById('m-app-name').innerText = d.appName;
+                document.getElementById('m-category-badge').innerText = (d.appCategory || 'SAMITI').toUpperCase();
+                document.getElementById('m-number').innerText = d.number;
+                document.getElementById('m-expiry').innerText = d.expiryDate;
+                document.getElementById('m-address').innerHTML = `<i class="fas fa-map-marker-alt"></i> ${d.address}`;
+                document.getElementById('m-status-switch').checked = d.isActive;
+                document.getElementById('m-description').value = d.description || '';
+                
+                const spoiler = document.getElementById('m-license-spoiler');
+                spoiler.className = 'spoiler-box hidden-key';
+                spoiler.innerText = id;
+                spoiler.dataset.state = 'hidden';
+            }
+        }
+
+        function closeManageView() {
+            document.getElementById('manage-view').classList.add('hidden');
+            document.getElementById('list-view').classList.remove('hidden');
+            currentManageId = null;
+        }
+
+        // --- UPDATED: Switch Toggle Logic ---
+        async function updateClientStatus() {
+            if(!currentManageId) return;
+            
+            const isChecked = document.getElementById('m-status-switch').checked;
+            const today = new Date().toISOString().split('T')[0];
+
+            // If Admin is trying to turn ON (Activate)
+            if (isChecked) {
+                // Check if date is expired
+                if (currentManageData.expiryDate < today) {
+                    // ALERT: It's expired!
+                    document.getElementById('m-status-switch').checked = false; // Turn switch back off immediately visually
+                    openExtendModal(); // Open the renewal modal
+                    return; // Stop here, do not update Firebase yet
+                }
+            }
+
+            // Normal operation (Turning OFF or Turning ON with valid date)
+            try {
+                await db.collection('clients').doc(currentManageId).update({ isActive: isChecked });
+                // Update local data variable to reflect change
+                currentManageData.isActive = isChecked;
+            } catch(e) {
+                alert("Update failed: " + e.message);
+                document.getElementById('m-status-switch').checked = !isChecked; 
+            }
+        }
+
+        // --- NEW: Renewal Functions ---
+        function openExtendModal() {
+            document.getElementById('renew-date-input').value = ""; // Reset date
+            document.getElementById('extend-modal').classList.remove('hidden');
+        }
+
+        function closeExtendModal() {
+            document.getElementById('extend-modal').classList.add('hidden');
+        }
+
+        async function saveRenewal() {
+            const newDate = document.getElementById('renew-date-input').value;
+            const today = new Date().toISOString().split('T')[0];
+
+            if (!newDate) return alert("Please select a date!");
+            if (newDate < today) return alert("Please select a future date!");
+
+            const btn = document.querySelector('#extend-modal .btn-add');
+            btn.innerHTML = "Updating...";
+            
+            try {
+                // Update Date AND set Active to true
+                await db.collection('clients').doc(currentManageId).update({
+                    expiryDate: newDate,
+                    isActive: true
+                });
+
+                // Update UI instantly
+                document.getElementById('m-expiry').innerText = newDate;
+                document.getElementById('m-status-switch').checked = true;
+                currentManageData.expiryDate = newDate; // Update local data
+                
+                closeExtendModal();
+                alert("Renewed & Activated Successfully!");
+
+            } catch(e) {
+                alert("Error: " + e.message);
+            } finally {
+                btn.innerHTML = '<i class="fas fa-check"></i> Renew & Activate';
+            }
+        }
+
+        function handleSpoilerClick() {
+            const el = document.getElementById('m-license-spoiler');
+            const state = el.dataset.state;
+
+            if (state === 'hidden') {
+                el.classList.remove('hidden-key');
+                el.dataset.state = 'visible';
+            } else {
+                navigator.clipboard.writeText(el.innerText).then(() => {
+                    const originalText = el.innerText;
+                    el.innerText = "COPIED!";
+                    el.style.backgroundColor = "#d1fae5";
+                    el.style.borderColor = "#10b981";
+                    setTimeout(() => {
+                        el.innerText = originalText;
+                        el.style.backgroundColor = "#f8fafc";
+                        el.style.borderColor = "#e2e8f0";
+                    }, 1500);
+                });
+            }
+        }
+
+        async function updateDescription() {
+            const desc = document.getElementById('m-description').value;
+            await db.collection('clients').doc(currentManageId).update({ description: desc });
+            alert("Note Saved!");
+        }
+
+        function viewConfig() {
+            if(currentManageData && currentManageData.config) {
+                const prettyJson = JSON.stringify(currentManageData.config, null, 2);
+                document.getElementById('config-display').textContent = prettyJson;
+                document.getElementById('config-modal').classList.remove('hidden');
+            }
+        }
+
+        function copyConfig() {
+            const text = document.getElementById('config-display').textContent;
+            navigator.clipboard.writeText(text).then(() => alert("Config Copied!"));
+        }
+
+        function openAddModal() { document.getElementById('add-modal').classList.remove('hidden'); }
+        function closeAddModal() { document.getElementById('add-modal').classList.add('hidden'); }
+
+    </script>
+</body>
+</html>
