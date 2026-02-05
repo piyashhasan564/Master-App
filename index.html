@@ -10,16 +10,16 @@
 
         /* --- DARK THEME VARIABLES --- */
         :root {
-            --primary: #3b82f6;       /* Brighter Blue for Dark Mode */
+            --primary: #3b82f6;       
             --primary-dark: #1d4ed8;
-            --secondary: #94a3b8;     /* Lighter gray for secondary text */
+            --secondary: #94a3b8;     
             --accent: #60a5fa;
-            --bg: #0f172a;            /* Deep Dark Blue/Slate */
-            --card-bg: #1e293b;       /* Lighter Dark for Cards */
-            --text-main: #f1f5f9;     /* White/Off-white text */
-            --text-light: #9ca3af;    /* Gray text */
-            --border-color: #334155;  /* Dark borders */
-            --input-bg: #020617;      /* Very dark input background */
+            --bg: #0f172a;            
+            --card-bg: #1e293b;       
+            --text-main: #f1f5f9;     
+            --text-light: #9ca3af;    
+            --border-color: #334155;  
+            --input-bg: #020617;      
             --success: #10b981;
             --danger: #ef4444;
             --warning: #f59e0b;
@@ -27,7 +27,6 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
         
-        /* Scrollbar Design for Dark Mode */
         ::-webkit-scrollbar { width: 8px; }
         ::-webkit-scrollbar-track { background: var(--bg); }
         ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
@@ -91,12 +90,24 @@
         .client-meta i { color: var(--accent); margin-right: 5px; }
 
         .client-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; min-width: 120px; }
+        
+        /* Buttons Group */
+        .action-buttons { display: flex; gap: 8px; }
+
         .status-pill { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
         .status-active { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.2); }
         .status-inactive { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); }
         
         .btn-manage { background: #334155; color: white; border: none; padding: 8px 18px; border-radius: 8px; font-size: 13px; cursor: pointer; transition: 0.2s; }
         .btn-manage:hover { background: var(--primary); }
+
+        /* NEW: Delete Button Style */
+        .btn-delete { 
+            background: rgba(239, 68, 68, 0.15); color: var(--danger); border: 1px solid rgba(239, 68, 68, 0.2); 
+            padding: 8px 12px; border-radius: 8px; font-size: 13px; cursor: pointer; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .btn-delete:hover { background: var(--danger); color: white; }
 
         /* --- Manage Page (Detail View) --- */
         .manage-header { text-align: center; margin-bottom: 30px; }
@@ -132,7 +143,6 @@
             background: #0f172a; border: 1px solid var(--border-color); color: var(--text-main);
         }
 
-        /* The "Jirjir" Effect (Noise/Blur) */
         .spoiler-box.hidden-key {
             color: transparent;
             background-color: #475569;
@@ -218,8 +228,7 @@
             </div>
         </div>
 
-        <!-- MANAGE DETAILS PAGE (Overlay View) -->
-        <!-- CHANGED INLINE STYLE: background: white -> background: var(--bg) for Dark Mode -->
+        <!-- MANAGE DETAILS PAGE -->
         <div id="manage-view" class="main-container hidden" style="background: var(--bg); position: absolute; top: 70px; left: 0; height: calc(100vh - 70px); width: 100%; z-index: 60;">
             <div style="max-width: 600px; margin: 0 auto; padding-top: 20px;">
                 <button class="back-btn" onclick="closeManageView()"><i class="fas fa-arrow-left"></i> Back to List</button>
@@ -239,7 +248,6 @@
                 </div>
 
                 <div class="control-box">
-                    <!-- Status Switch -->
                     <div class="switch-group">
                         <div>
                             <span class="switch-label">App Status</span>
@@ -251,22 +259,18 @@
                         </label>
                     </div>
 
-                    <!-- License Key Spoiler -->
                     <div class="license-container">
                         <span class="license-label">License Key (Tap to Reveal/Copy)</span>
                         <div id="m-license-spoiler" class="spoiler-box hidden-key" onclick="handleSpoilerClick()">
-                            <!-- Key will be injected here -->
                         </div>
                     </div>
 
-                    <!-- Description -->
                     <div class="desc-box">
                         <label class="switch-label" style="font-size:13px; display:block; margin-bottom:5px;">Admin Note / Description</label>
                         <textarea id="m-description" placeholder="Write details about this client..."></textarea>
                         <button class="btn-update-desc" onclick="updateDescription()">Save Note</button>
                     </div>
 
-                    <!-- Config Button -->
                     <button class="btn-config" onclick="viewConfig()">
                         <i class="fas fa-code"></i> View Firebase Config (JSON)
                     </button>
@@ -293,7 +297,6 @@
                     <input type="hidden" id="uploaded-image-url">
                 </div>
 
-                <!-- App Category Selection -->
                 <div class="form-group">
                     <label>App Category</label>
                     <select id="new-app-category" required>
@@ -339,7 +342,7 @@
         </div>
     </div>
 
-    <!-- NEW: RENEW / EXTEND EXPIRY MODAL -->
+    <!-- RENEW / EXTEND EXPIRY MODAL -->
     <div id="extend-modal" class="modal hidden">
         <div class="modal-content" style="border: 2px solid var(--danger);">
             <div style="text-align:center; margin-bottom:20px;">
@@ -460,7 +463,6 @@
         // 4. CLIENT MANAGEMENT (CRUD)
         // ==========================================
         
-        // --- A. Generate License Key (PZZ-XXXXXXXXXX) ---
         function generateLicenseKey() {
             const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
             let randomStr = '';
@@ -470,7 +472,6 @@
             return 'PZZ-' + randomStr;
         }
 
-        // --- B. Add Client ---
         document.getElementById('add-client-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('btn-submit-client');
@@ -485,7 +486,6 @@
                 const configStr = document.getElementById('new-config').value;
                 const appType = document.getElementById('new-app-category').value;
                 
-                // --- SMART CONFIG PARSER ---
                 const firstBrace = configStr.indexOf('{');
                 const lastBrace = configStr.lastIndexOf('}');
 
@@ -529,13 +529,12 @@
             }
         });
 
-        // --- C. Load List (Auto-Expiry Check) ---
         function loadClients() {
             db.collection('clients').orderBy('createdAt', 'desc').onSnapshot(snap => {
                 const container = document.getElementById('clients-list-container');
                 container.innerHTML = '';
                 
-                const today = new Date().toISOString().split('T')[0]; // Current Date YYYY-MM-DD
+                const today = new Date().toISOString().split('T')[0];
 
                 if(snap.empty) {
                     container.innerHTML = '<p style="text-align:center; color:#999; margin-top:50px;">No clients found.</p>';
@@ -545,8 +544,6 @@
                 snap.forEach(doc => {
                     const d = doc.data();
                     
-                    // --- AUTO EXPIRE LOGIC ---
-                    // If client is marked active, BUT date is passed, make inactive automatically
                     if (d.isActive && d.expiryDate < today) {
                         db.collection('clients').doc(doc.id).update({ isActive: false });
                     }
@@ -572,10 +569,15 @@
                             </div>
                         </div>
                         <div class="client-actions">
-                            <span class="status-pill ${statusClass}">${statusText}</span>
-                            <button class="btn-manage" onclick="openManagePage('${doc.id}')">
-                                Manage <i class="fas fa-chevron-right"></i>
-                            </button>
+                            <span class="status-pill ${statusClass}" style="margin-bottom:5px;">${statusText}</span>
+                            <div class="action-buttons">
+                                <button class="btn-manage" onclick="openManagePage('${doc.id}')">
+                                    Manage <i class="fas fa-chevron-right"></i>
+                                </button>
+                                <button class="btn-delete" onclick="deleteClient('${doc.id}')">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
                         </div>
                     </div>`;
                     container.innerHTML += html;
@@ -583,8 +585,20 @@
             });
         }
 
+        // --- NEW: DELETE FUNCTION ---
+        async function deleteClient(id) {
+            if(confirm("Are you sure you want to PERMANENTLY DELETE this client? This action cannot be undone.")) {
+                try {
+                    await db.collection('clients').doc(id).delete();
+                    alert("Client deleted successfully!");
+                } catch(e) {
+                    alert("Error deleting client: " + e.message);
+                }
+            }
+        }
+
         // ==========================================
-        // 5. MANAGE PAGE LOGIC (Updated with Validation)
+        // 5. MANAGE PAGE LOGIC
         // ==========================================
         async function openManagePage(id) {
             currentManageId = id;
@@ -619,28 +633,22 @@
             currentManageId = null;
         }
 
-        // --- UPDATED: Switch Toggle Logic ---
         async function updateClientStatus() {
             if(!currentManageId) return;
             
             const isChecked = document.getElementById('m-status-switch').checked;
             const today = new Date().toISOString().split('T')[0];
 
-            // If Admin is trying to turn ON (Activate)
             if (isChecked) {
-                // Check if date is expired
                 if (currentManageData.expiryDate < today) {
-                    // ALERT: It's expired!
-                    document.getElementById('m-status-switch').checked = false; // Turn switch back off immediately visually
-                    openExtendModal(); // Open the renewal modal
-                    return; // Stop here, do not update Firebase yet
+                    document.getElementById('m-status-switch').checked = false; 
+                    openExtendModal(); 
+                    return; 
                 }
             }
 
-            // Normal operation (Turning OFF or Turning ON with valid date)
             try {
                 await db.collection('clients').doc(currentManageId).update({ isActive: isChecked });
-                // Update local data variable to reflect change
                 currentManageData.isActive = isChecked;
             } catch(e) {
                 alert("Update failed: " + e.message);
@@ -648,9 +656,8 @@
             }
         }
 
-        // --- NEW: Renewal Functions ---
         function openExtendModal() {
-            document.getElementById('renew-date-input').value = ""; // Reset date
+            document.getElementById('renew-date-input').value = ""; 
             document.getElementById('extend-modal').classList.remove('hidden');
         }
 
@@ -669,16 +676,14 @@
             btn.innerHTML = "Updating...";
             
             try {
-                // Update Date AND set Active to true
                 await db.collection('clients').doc(currentManageId).update({
                     expiryDate: newDate,
                     isActive: true
                 });
 
-                // Update UI instantly
                 document.getElementById('m-expiry').innerText = newDate;
                 document.getElementById('m-status-switch').checked = true;
-                currentManageData.expiryDate = newDate; // Update local data
+                currentManageData.expiryDate = newDate; 
                 
                 closeExtendModal();
                 alert("Renewed & Activated Successfully!");
