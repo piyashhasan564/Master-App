@@ -3,101 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Master Admin</title>
+    <title>Premium Master Admin (Dark)</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
+        /* --- DARK THEME VARIABLES --- */
         :root {
-            --primary: #2563eb;
-            --secondary: #1e293b;
-            --accent: #3b82f6;
-            --bg: #f3f4f6;
-            --card-bg: #ffffff;
-            --text-main: #1f2937;
-            --text-light: #6b7280;
+            --primary: #3b82f6;       /* Brighter Blue for Dark Mode */
+            --primary-dark: #1d4ed8;
+            --secondary: #94a3b8;     /* Lighter gray for secondary text */
+            --accent: #60a5fa;
+            --bg: #0f172a;            /* Deep Dark Blue/Slate */
+            --card-bg: #1e293b;       /* Lighter Dark for Cards */
+            --text-main: #f1f5f9;     /* White/Off-white text */
+            --text-light: #9ca3af;    /* Gray text */
+            --border-color: #334155;  /* Dark borders */
+            --input-bg: #020617;      /* Very dark input background */
             --success: #10b981;
             --danger: #ef4444;
             --warning: #f59e0b;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        
+        /* Scrollbar Design for Dark Mode */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
         body { background: var(--bg); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
 
         /* --- Navbar --- */
         .navbar {
             background: var(--card-bg); height: 70px; display: flex; justify-content: space-between; align-items: center;
-            padding: 0 30px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); z-index: 50;
+            padding: 0 30px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); z-index: 50; border-bottom: 1px solid var(--border-color);
         }
         .navbar h2 { font-size: 20px; font-weight: 700; color: var(--primary); display: flex; align-items: center; gap: 10px; }
-        .logout-btn { background: #fee2e2; color: var(--danger); border: none; padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; }
+        
+        .logout-btn { 
+            background: rgba(239, 68, 68, 0.1); 
+            color: var(--danger); 
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            padding: 8px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s; 
+        }
         .logout-btn:hover { background: var(--danger); color: white; }
-/* Home Button Design */
-.home-btn { 
-    background: #10b981; /* সবুজ রঙ */
-    color: white; 
-    border: none; 
-    padding: 8px 15px; 
-    border-radius: 8px; 
-    font-weight: 600; 
-    cursor: pointer; 
-    transition: 0.3s; 
-    margin-right: 10px; /* Logout বাটন থেকে একটু দূরে */
-}
-.home-btn:hover { 
-    background: #059669; 
-    transform: translateY(-2px);
-}
+
         /* --- Layout --- */
         .main-container { flex: 1; padding: 30px; overflow-y: auto; max-width: 1200px; margin: 0 auto; width: 100%; }
         .hidden { display: none !important; }
 
+        #main-app {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            width: 100%;
+            overflow: hidden;
+        }
+
         /* --- Cards & Lists --- */
         .header-action { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
-        .btn-add { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 10px; font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2); display: flex; align-items: center; gap: 8px; transition: 0.2s; }
-        .btn-add:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(37, 99, 235, 0.3); }
+        
+        .btn-add { 
+            background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 10px; 
+            font-weight: 600; cursor: pointer; box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3); 
+            display: flex; align-items: center; gap: 8px; transition: 0.2s; 
+        }
+        .btn-add:hover { transform: translateY(-2px); box-shadow: 0 6px 15px rgba(59, 130, 246, 0.5); background-color: var(--primary-dark); }
 
         /* --- Client List Item Design --- */
         .client-card {
             background: var(--card-bg); border-radius: 16px; padding: 20px; margin-bottom: 20px;
             display: flex; align-items: center; justify-content: space-between;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.03); border: 1px solid #e5e7eb; transition: 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.2); border: 1px solid var(--border-color); transition: 0.3s;
         }
-        .client-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.08); border-color: var(--primary); }
+        .client-card:hover { transform: translateY(-3px); box-shadow: 0 10px 25px rgba(0,0,0,0.4); border-color: var(--primary); }
 
         .client-info-wrapper { display: flex; align-items: center; gap: 20px; flex: 1; }
-        .client-img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 3px solid #e2e8f0; }
+        .client-img { width: 70px; height: 70px; border-radius: 50%; object-fit: cover; border: 3px solid var(--border-color); }
         
-        .client-details h3 { font-size: 18px; font-weight: 700; color: var(--secondary); margin-bottom: 4px; }
-        .app-badge { background: #eff6ff; color: var(--primary); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; }
-        .category-badge { background: #f3e8ff; color: #9333ea; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; margin-left: 5px; text-transform: uppercase; }
+        .client-details h3 { font-size: 18px; font-weight: 700; color: var(--text-main); margin-bottom: 4px; }
+        .app-badge { background: rgba(59, 130, 246, 0.1); color: var(--primary); padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 600; border: 1px solid rgba(59, 130, 246, 0.2); }
+        .category-badge { background: rgba(147, 51, 234, 0.1); color: #c084fc; padding: 2px 8px; border-radius: 4px; font-size: 10px; font-weight: 600; margin-left: 5px; text-transform: uppercase; border: 1px solid rgba(147, 51, 234, 0.2); }
         
         .client-meta { font-size: 13px; color: var(--text-light); margin-top: 5px; display: flex; flex-wrap: wrap; gap: 15px; }
         .client-meta i { color: var(--accent); margin-right: 5px; }
 
         .client-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 10px; min-width: 120px; }
         .status-pill { padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
-        .status-active { background: #d1fae5; color: #059669; }
-        .status-inactive { background: #fee2e2; color: #dc2626; }
+        .status-active { background: rgba(16, 185, 129, 0.15); color: #34d399; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .status-inactive { background: rgba(239, 68, 68, 0.15); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.2); }
         
-        .btn-manage { background: var(--secondary); color: white; border: none; padding: 8px 18px; border-radius: 8px; font-size: 13px; cursor: pointer; transition: 0.2s; }
+        .btn-manage { background: #334155; color: white; border: none; padding: 8px 18px; border-radius: 8px; font-size: 13px; cursor: pointer; transition: 0.2s; }
         .btn-manage:hover { background: var(--primary); }
 
         /* --- Manage Page (Detail View) --- */
         .manage-header { text-align: center; margin-bottom: 30px; }
-        .manage-img { width: 100px; height: 100px; border-radius: 50%; border: 4px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .manage-title { font-size: 24px; font-weight: 700; margin-top: 10px; }
+        .manage-img { width: 100px; height: 100px; border-radius: 50%; border: 4px solid var(--card-bg); box-shadow: 0 5px 15px rgba(0,0,0,0.3); }
+        .manage-title { font-size: 24px; font-weight: 700; margin-top: 10px; color: var(--text-main); }
         .manage-subtitle { color: var(--text-light); font-size: 14px; margin-top: 5px; }
 
-        .control-box { background: white; padding: 25px; border-radius: 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); max-width: 600px; margin: 0 auto; }
+        .control-box { 
+            background: var(--card-bg); padding: 25px; border-radius: 16px; 
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2); max-width: 600px; margin: 0 auto; 
+            border: 1px solid var(--border-color);
+        }
         
-        .switch-group { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px dashed #e5e7eb; }
-        .switch-label { font-weight: 600; color: var(--secondary); }
+        .switch-group { display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px dashed var(--border-color); }
+        .switch-label { font-weight: 600; color: var(--text-main); }
         
         /* Toggle Switch */
         .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
         .switch input { opacity: 0; width: 0; height: 0; }
-        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #475569; transition: .4s; border-radius: 34px; }
         .slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
         input:checked + .slider { background-color: var(--primary); }
         input:checked + .slider:before { transform: translateX(24px); }
@@ -110,47 +129,57 @@
             position: relative; display: inline-block; padding: 12px 20px; 
             border-radius: 8px; font-family: 'Courier New', monospace; font-weight: bold; font-size: 16px;
             cursor: pointer; user-select: none; transition: 0.3s; width: 100%;
-            background: #f8fafc; border: 1px solid #e2e8f0; color: #333;
+            background: #0f172a; border: 1px solid var(--border-color); color: var(--text-main);
         }
 
         /* The "Jirjir" Effect (Noise/Blur) */
         .spoiler-box.hidden-key {
             color: transparent;
-            background-color: #94a3b8;
+            background-color: #475569;
             background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.5'/%3E%3C/svg%3E");
             text-shadow: 0 0 10px rgba(0,0,0,0.5);
             overflow: hidden;
+            border-color: #475569;
         }
         .spoiler-box.hidden-key::after {
             content: "CLICK TO REVEAL"; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            font-size: 10px; color: rgba(255,255,255,0.8); font-family: sans-serif; letter-spacing: 1px;
+            font-size: 10px; color: rgba(255,255,255,0.9); font-family: sans-serif; letter-spacing: 1px; font-weight: 700;
         }
 
         .desc-box { margin-top: 20px; }
-        .desc-box textarea { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; resize: vertical; min-height: 80px; }
-        .btn-update-desc { margin-top: 8px; width: 100%; padding: 8px; background: var(--secondary); color: white; border: none; border-radius: 6px; cursor: pointer; }
+        .desc-box textarea { width: 100%; padding: 12px; background: var(--input-bg); color: white; border: 1px solid var(--border-color); border-radius: 8px; font-size: 13px; resize: vertical; min-height: 80px; }
+        .desc-box textarea:focus { border-color: var(--primary); outline: none; }
+        .btn-update-desc { margin-top: 8px; width: 100%; padding: 8px; background: #334155; color: white; border: none; border-radius: 6px; cursor: pointer; }
+        .btn-update-desc:hover { background: var(--primary); }
 
-        .btn-config { margin-top: 20px; width: 100%; padding: 15px; background: #e0f2fe; color: #0284c7; border: 2px dashed #0284c7; border-radius: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        .btn-config:hover { background: #bae6fd; }
+        .btn-config { margin-top: 20px; width: 100%; padding: 15px; background: rgba(2, 132, 199, 0.1); color: #38bdf8; border: 2px dashed #0284c7; border-radius: 10px; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        .btn-config:hover { background: rgba(2, 132, 199, 0.2); }
 
         /* --- Login & Modals --- */
-        #login-view { height: 100vh; display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, #2563eb, #1e40af); }
-        .login-box { background: white; padding: 40px; border-radius: 20px; width: 100%; max-width: 380px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); text-align: center; }
-        .login-input { width: 100%; padding: 14px; margin-bottom: 15px; border: 2px solid #f1f5f9; border-radius: 10px; outline: none; transition: 0.3s; }
+        #login-view { height: 100vh; display: flex; justify-content: center; align-items: center; background: linear-gradient(135deg, #0f172a, #1e293b); }
+        .login-box { background: var(--card-bg); padding: 40px; border-radius: 20px; width: 100%; max-width: 380px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); text-align: center; border: 1px solid var(--border-color); }
+        .login-input { width: 100%; padding: 14px; margin-bottom: 15px; background: var(--input-bg); color: white; border: 2px solid var(--border-color); border-radius: 10px; outline: none; transition: 0.3s; }
         .login-input:focus { border-color: var(--primary); }
 
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); backdrop-filter: blur(5px); z-index: 1000; display: flex; justify-content: center; align-items: center; }
-        .modal-content { background: white; padding: 30px; border-radius: 20px; width: 90%; max-width: 500px; animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); max-height: 90vh; overflow-y: auto; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); z-index: 1000; display: flex; justify-content: center; align-items: center; }
+        .modal-content { background: var(--card-bg); color: var(--text-main); padding: 30px; border-radius: 20px; width: 90%; max-width: 500px; animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); max-height: 90vh; overflow-y: auto; border: 1px solid var(--border-color); }
         @keyframes popUp { from { transform: scale(0.8); opacity: 0; } to { transform: scale(1); opacity: 1; } }
 
         /* Form Styling */
         .form-group { margin-bottom: 15px; text-align: left; }
         .form-group label { display: block; font-size: 13px; font-weight: 600; color: var(--secondary); margin-bottom: 5px; }
-        .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 14px; }
-        .file-upload { border: 2px dashed #cbd5e1; padding: 20px; text-align: center; border-radius: 8px; cursor: pointer; color: var(--text-light); }
-        .file-upload:hover { border-color: var(--primary); color: var(--primary); }
+        .form-group input, .form-group textarea, .form-group select { 
+            width: 100%; padding: 12px; 
+            background: var(--input-bg); color: white; 
+            border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; 
+        }
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus { border-color: var(--primary); outline: none; }
+        
+        .file-upload { border: 2px dashed var(--border-color); padding: 20px; text-align: center; border-radius: 8px; cursor: pointer; color: var(--text-light); transition: 0.3s; }
+        .file-upload:hover { border-color: var(--primary); color: var(--primary); background: rgba(59, 130, 246, 0.05); }
 
-        .back-btn { background: transparent; border: none; font-size: 18px; color: var(--secondary); cursor: pointer; margin-right: 15px; }
+        .back-btn { background: transparent; border: none; font-size: 18px; color: var(--text-main); cursor: pointer; margin-right: 15px; }
+        .back-btn:hover { color: var(--primary); }
     </style>
 </head>
 <body>
@@ -159,7 +188,7 @@
     <div id="login-view">
         <div class="login-box">
             <h2 style="color:var(--primary); margin-bottom:10px;">Master Panel</h2>
-            <p style="color:var(--text-light); margin-bottom:25px; font-size:14px;">Secure Access Control</p>
+            <p style="color:var(--text-light); margin-bottom:25px; font-size:14px;">Secure Access Control (Dark)</p>
             <form id="login-form">
                 <input type="email" id="login-email" class="login-input" placeholder="Admin Email" required>
                 <input type="password" id="login-password" class="login-input" placeholder="Password" required>
@@ -169,23 +198,13 @@
     </div>
 
     <!-- 2. MAIN APP DASHBOARD -->
-    <div id="main-app" class="hidden">
+<div id="main-app" class="hidden" style="display: flex; flex-direction: column; height: 100%;">
         
-        <!-- Navbar এর ভেতরে এই বাটনটি বসান -->
-<div class="navbar">
-    <h2><i class="fas fa-shield-alt"></i> Master Admin</h2>
-    
-    <!-- ⬇️ নতুন হোম বাটন (এখানে বসান) ⬇️ -->
-    <div>
-        <button class="home-btn" onclick="goBackToApp()">
-            <i class="fas fa-home"></i> Home App
-        </button>
-        
-        <button class="logout-btn" onclick="logoutMaster()">
-            <i class="fas fa-sign-out-alt"></i> Logout
-        </button>
-    </div>
-</div>
+        <!-- Navbar -->
+        <div class="navbar">
+            <h2><i class="fas fa-shield-alt"></i> Master Admin</h2>
+            <button class="logout-btn" onclick="logoutMaster()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+        </div>
 
         <!-- LIST VIEW PAGE -->
         <div id="list-view" class="main-container">
@@ -200,7 +219,8 @@
         </div>
 
         <!-- MANAGE DETAILS PAGE (Overlay View) -->
-        <div id="manage-view" class="main-container hidden" style="background: white; position: absolute; top: 70px; left: 0; height: calc(100vh - 70px); width: 100%; z-index: 60;">
+        <!-- CHANGED INLINE STYLE: background: white -> background: var(--bg) for Dark Mode -->
+        <div id="manage-view" class="main-container hidden" style="background: var(--bg); position: absolute; top: 70px; left: 0; height: calc(100vh - 70px); width: 100%; z-index: 60;">
             <div style="max-width: 600px; margin: 0 auto; padding-top: 20px;">
                 <button class="back-btn" onclick="closeManageView()"><i class="fas fa-arrow-left"></i> Back to List</button>
                 
@@ -276,7 +296,7 @@
                 <!-- App Category Selection -->
                 <div class="form-group">
                     <label>App Category</label>
-                    <select id="new-app-category" required style="background:#f0f9ff; border-color:#bae6fd;">
+                    <select id="new-app-category" required>
                         <option value="samiti">Samiti App (Visible in User Panel)</option>
                         <option value="other">Other / Admin Only (Hidden)</option>
                     </select>
@@ -324,7 +344,7 @@
         <div class="modal-content" style="border: 2px solid var(--danger);">
             <div style="text-align:center; margin-bottom:20px;">
                 <i class="fas fa-exclamation-circle" style="font-size: 40px; color: var(--danger); margin-bottom:10px;"></i>
-                <h3 style="font-size:18px; color:var(--secondary);">Expired! Renewal Required</h3>
+                <h3 style="font-size:18px; color:var(--text-main);">Expired! Renewal Required</h3>
                 <p style="font-size:13px; color:var(--text-light);">এই ক্লায়েন্টের মেয়াদ শেষ হয়ে গেছে। পুনরায় চালু করতে নতুন তারিখ দিন।</p>
             </div>
             
@@ -342,12 +362,12 @@
 
     <!-- CONFIG VIEW MODAL -->
     <div id="config-modal" class="modal hidden">
-        <div class="modal-content" style="background: #1e293b; color: #a5b4fc;">
+        <div class="modal-content" style="background: #0f172a; color: #e2e8f0; border: 1px solid #334155;">
             <div style="display:flex; justify-content:space-between; margin-bottom:15px; border-bottom:1px solid #334155; padding-bottom:10px;">
                 <h3 style="color:white;">Configuration</h3>
                 <span style="cursor:pointer; font-size:24px; color:white;" onclick="document.getElementById('config-modal').classList.add('hidden')">&times;</span>
             </div>
-            <pre id="config-display" style="white-space: pre-wrap; word-break: break-all; font-family: monospace; font-size: 12px;"></pre>
+            <pre id="config-display" style="white-space: pre-wrap; word-break: break-all; font-family: monospace; font-size: 12px; color: #a5b4fc;"></pre>
             <button onclick="copyConfig()" style="width:100%; margin-top:15px; padding:10px; background:var(--primary); color:white; border:none; border-radius:5px; cursor:pointer;">Copy Config</button>
         </div>
     </div>
@@ -435,13 +455,7 @@
                 }
             }
         });
-// --- BACK TO INDEX APP FUNCTION ---
-function goBackToApp() {
-    // এটি ফোনের ব্যাক বাটনের মতো কাজ করবে এবং আগের পেজে (Index App) নিয়ে যাবে
-    if (confirm("Go back to Main App?")) {
-        window.history.back();
-    }
-}
+
         // ==========================================
         // 4. CLIENT MANAGEMENT (CRUD)
         // ==========================================
@@ -551,7 +565,7 @@ function goBackToApp() {
                                 <span class="category-badge">${category}</span>
                                 <div class="client-meta">
                                     <span><i class="fas fa-phone-alt"></i> ${d.number}</span>
-                                    <span style="color: #dc2626;"><i class="fas fa-clock"></i> ${d.expiryDate}</span>
+                                    <span style="color: #ef4444;"><i class="fas fa-clock"></i> ${d.expiryDate}</span>
                                     <span style="display:block; width:100%; margin-top:5px;"><i class="fas fa-map-marker-alt"></i> ${d.address}</span>
 
                                 </div>
@@ -687,12 +701,14 @@ function goBackToApp() {
                 navigator.clipboard.writeText(el.innerText).then(() => {
                     const originalText = el.innerText;
                     el.innerText = "COPIED!";
-                    el.style.backgroundColor = "#d1fae5";
+                    el.style.backgroundColor = "#064e3b";
                     el.style.borderColor = "#10b981";
+                    el.style.color = "white";
                     setTimeout(() => {
                         el.innerText = originalText;
-                        el.style.backgroundColor = "#f8fafc";
-                        el.style.borderColor = "#e2e8f0";
+                        el.style.backgroundColor = "#0f172a";
+                        el.style.borderColor = "var(--border-color)";
+                        el.style.color = "var(--text-main)";
                     }, 1500);
                 });
             }
